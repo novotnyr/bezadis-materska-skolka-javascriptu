@@ -1,0 +1,48 @@
+var gulp = require("gulp");
+var babelify = require('babelify');
+var browserify = require("browserify");
+var fs = require("fs");
+
+gulp.task("default",["copyStaticFiles", "build"]);
+
+gulp.task("build", function(){
+    var browserifyConfig = {
+        entries: ["./src/rest-client.js", "./src/rest-ui.js"]
+    };
+    var babelifyConfig = {
+        presets: ["env"]
+    };
+
+    return browserify(browserifyConfig)
+        .transform(babelify.configure(babelifyConfig))
+        .bundle()
+        .pipe(fs.createWriteStream("./dist/bundle.js"));
+});
+
+
+gulp.task("copyStaticFiles", function(){
+    return gulp.src("./src/html/*.*")
+        .pipe(gulp.dest("./dist"));
+});
+
+
+--
+
+{
+  "name": "application-name",
+  "version": "0.0.1",
+  "devDependencies": {
+    "babel-preset-env": "^1.4.0",
+    "babelify": "^7.3.0",
+    "browserify": "^14.3.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-connect": "^5.0.0",
+    "vinyl-source-stream": "^1.1.0"
+  },
+  "dependencies": {
+    "axios": "^0.16.1",
+    "fs": "0.0.1-security",
+    "jquery": "^3.2.1"
+  }
+}
